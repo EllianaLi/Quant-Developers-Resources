@@ -17,9 +17,9 @@ It builds an **ensemble of shallow trees**, each trained to correct the **residu
 
 At each iteration \( t \), we add a new tree \( f_t \) to minimize the total loss:
 
-\[
+$$
 \hat{y}_i^{(t)} = \hat{y}_i^{(t-1)} + f_t(x_i)
-\]
+$$
 
 Where:
 
@@ -33,8 +33,8 @@ Where:
 
 | Task                  | Loss Function                         | Example                                        |
 |-----------------------|----------------------------------------|------------------------------------------------|
-| **Regression**        | Mean Squared Error (default)           | \( (y - \hat{y})^2 \)                           |
-| **Classification**    | Logistic / Log Loss                    | \( -[y\log(p) + (1-y)\log(1-p)] \)             |
+| **Regression**        | Mean Squared Error (default)           | $$ (y - \hat{y})^2 $$                          |
+| **Classification**    | Logistic / Log Loss                    | $$ -[y\log(p) + (1-y)\log(1-p)] $$             |
 | **Ranking**           | Pairwise loss (LambdaRank, etc.)       | Used in recommendation or stock ranking        |
 | **Custom Objective**  | Define your own                        | e.g. asymmetric loss for trading               |
 
@@ -44,14 +44,14 @@ Where:
 
 The objective function is:
 
-\[
+$$
 \mathcal{L}^{(t)} = \sum_{i=1}^n l(y_i, \hat{y}_i) + \sum_{k=1}^t \Omega(f_k)
-\]
+$$
 
 Where:
 
 - \( l \): loss function (MSE, logistic, etc.)  
-- \( \Omega(f_k) = \gamma T + \frac{1}{2} \lambda \sum_j w_j^2 \)
+- $$ \Omega(f_k) = \gamma T + \frac{1}{2} \lambda \sum_j w_j^2 $$
 
 **Terms:**
 
@@ -64,24 +64,24 @@ Where:
 
 XGBoost uses a **second-order Taylor expansion** for fast optimization:
 
-\[
+$$
 \mathcal{L}^{(t)} \approx \sum_{i=1}^n \left[ g_i f_t(x_i) + \frac{1}{2} h_i f_t(x_i)^2 \right] + \Omega(f_t)
-\]
+$$
 
 Where:
 
-- \( g_i = \frac{\partial l}{\partial \hat{y}_i} \): gradient  
-- \( h_i = \frac{\partial^2 l}{\partial \hat{y}_i^2} \): hessian
+- $$ g_i = \frac{\partial l}{\partial \hat{y}_i} $$ (gradient)  
+- $$ h_i = \frac{\partial^2 l}{\partial \hat{y}_i^2} $$ (hessian)
 
 ---
 
 ## 🌳 Tree Building and Split Gain
 
-Split Gain formula for tree node:
+Split Gain formula for a tree node:
 
-\[
+$$
 \text{Gain} = \frac{1}{2} \left[ \frac{G_L^2}{H_L + \lambda} + \frac{G_R^2}{H_R + \lambda} - \frac{(G_L + G_R)^2}{H_L + H_R + \lambda} \right] - \gamma
-\]
+$$
 
 - \( G, H \): sums of gradients and hessians  
 - Split is chosen if gain is large enough
